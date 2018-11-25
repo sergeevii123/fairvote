@@ -18,7 +18,7 @@ from neo.contrib.smartcontract import SmartContract
 from neo.SmartContract.ContractParameter import ContractParameter, ContractParameterType
 
 # Set the hash of your contract here:
-SMART_CONTRACT_HASH = "0x97d87b287c82cfc0b74bd7e67bbe9e1cbbfd090d"
+SMART_CONTRACT_HASH = "0xffb1c97830cf6de4cec115c623dc9e1c321df451"
 
 # Default REST API port is 8080, and can be overwritten with an env var:
 API_PORT = os.getenv("NEO_REST_API_PORT", 8080)

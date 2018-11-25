@@ -9,9 +9,6 @@ ctx = GetContext()
 
 def Main(operation, args):
 
-    if operation == 'deploy':
-        return deploy()
-
     if operation == 'add_users':
         print("Running Verification!")
         is_owner = CheckWitness(OWNER)
@@ -34,6 +31,10 @@ def Main(operation, args):
     if operation == 'add_poll':
         poll = args[0]
         return add_poll(poll)
+
+    if operation == 'vote':
+        vote = args[0]
+        return make_vote(vote)
 
 
 def add_users(users):
@@ -59,7 +60,9 @@ def current_vote(user):
         Notify(vote)
         print("current vote", vote)
         return True
+
     return False
+
 
 def add_poll(poll):
     kyc_status = sender_is_in_DAO(ctx)
@@ -68,22 +71,26 @@ def add_poll(poll):
         poll_res = concat(poll, "res")
         Put(ctx, poll_res, 0)
         return True
+
     return False
 
 
-def vote(vote):
+def make_vote(vote):
     kyc_status = sender_is_in_DAO(ctx)
-    if kyc_status:
+    address = get_asset_attachments()[1] 
+    print("user", address)
+    is_sender = CheckWitness(address)
+    if kyc_status and is_sender:
         poll_key = Get(ctx, "poll")
         kyc_poll_key = concat(poll_key, address)
-        attachments = get_asset_attachments() 
-        print("user", attachments[1])
-        CheckWitness(attachments[1])
         Put(ctx, kyc_poll_key, vote)
+
         poll_res = concat(poll_key, "res")
         cur_res = Get(ctx, poll_res)
         Put(ctx, poll_res, cur_res+vote)
-    return True
+        return True
+
+    return False
 
 
 def check_user(user):
@@ -98,15 +105,3 @@ def check_user(user):
     kyc_status = sender_is_in_DAO(ctx)
     print("User is in DAO kyc ", kyc_status)
     return user
-
-
-def deploy():
-    if not CheckWitness(OWNER):
-        print("Must be owner to deploy")
-        return False
-
-    Put(ctx, 'initialized', 1)
-    Put(ctx, OWNER, "blank_vote")
-    Put(ctx, "all_users", 1)
-    
-    return True
