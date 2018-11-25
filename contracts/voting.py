@@ -31,6 +31,10 @@ def Main(operation, args):
         user = args[0]
         return current_vote(user)
 
+    if operation == 'add_poll':
+        poll = args[0]
+        return add_poll(poll)
+
 
 def add_users(users):
     ok_count = 0
@@ -56,6 +60,30 @@ def current_vote(user):
         print("current vote", vote)
         return True
     return False
+
+def add_poll(poll):
+    kyc_status = sender_is_in_DAO(ctx)
+    if kyc_status:
+        Put(ctx, "poll", poll)
+        poll_res = concat(poll, "res")
+        Put(ctx, poll_res, 0)
+        return True
+    return False
+
+
+def vote(vote):
+    kyc_status = sender_is_in_DAO(ctx)
+    if kyc_status:
+        poll_key = Get(ctx, "poll")
+        kyc_poll_key = concat(poll_key, address)
+        attachments = get_asset_attachments() 
+        print("user", attachments[1])
+        CheckWitness(attachments[1])
+        Put(ctx, kyc_poll_key, vote)
+        poll_res = concat(poll_key, "res")
+        cur_res = Get(ctx, poll_res)
+        Put(ctx, poll_res, cur_res+vote)
+    return True
 
 
 def check_user(user):
