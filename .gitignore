@@ -1,0 +1,5 @@
+*.avm
+*.debug.json
+*.swp
+*.pyc
+.DS_store
