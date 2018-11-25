@@ -42,7 +42,7 @@ def add_users(users):
         Put(ctx, "all_users", current_user_number+1)
         res = kyc_register(ctx, user)
         if res:
-        ok_count += 1
+            ok_count += 1
 
     Notify(concat("Added users ", ok_count))
     return ok_count
@@ -51,10 +51,10 @@ def add_users(users):
 def current_vote(user):
     kyc_status = sender_is_in_DAO(ctx)
     if kyc_status:
-    vote = Get(ctx, user)
-    Notify(vote)
-    print("current vote", vote)
-    return True
+        vote = Get(ctx, user)
+        Notify(vote)
+        print("current vote", vote)
+        return True
     return False
 
 
